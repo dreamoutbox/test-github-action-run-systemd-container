@@ -77,7 +77,7 @@ jobs:
         run: |
           docker exec vps1 systemctl status
 
-      - name: Test Service Execution
+      - name: Test vps1
         run: |
           # Example: Install and verify a systemd service (nginx)
           docker exec vps1 apt-get update
@@ -88,6 +88,22 @@ jobs:
           docker exec vps1 systemctl is-active nginx
           # test curl
           curl http://localhost:80
+
+      - name: Verify Systemd is Running
+        run: |
+          docker exec vps2 systemctl status
+
+      - name: Test vps2
+        run: |
+          # Example: Install and verify a systemd service (nginx)
+          docker exec vps2 apt-get update
+          docker exec vps2 apt-get install -y nginx
+          docker exec vps2 systemctl start nginx
+          # wait for 5 seconds
+          sleep 5
+          docker exec vps2 systemctl is-active nginx
+          # test curl
+          curl http://localhost:82
 
       - name: compos down
         if: always()

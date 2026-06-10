@@ -34,6 +34,39 @@ services:
     environment:
       - TZ=Asia/Bangkok
 
+  vps2:
+    image: docker.io/dreamoutbox/crane-dev-vps:latest
+    container_name: vps2
+    hostname: vps2
+    privileged: true # required for systemd
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - ./keys/authorized_keys:/opt/authorized_keys:ro
+    ports:
+      - "2222:22"
+      - "8082:80"
+      - "8442:443"
+      - "3002:3000"
+      - "82:80"
+      - "8082:8080"
+      - "44302:443"
+      - "5432:5432"
+      - "5002:5432"
+    networks:
+      crane-net:
+        ipv4_address: 10.0.0.12
+    tmpfs:
+      - /run
+      - /run/lock
+      - /tmp
+    stop_signal: SIGRTMIN+3 # clean systemd shutdown
+    mem_limit: 1G
+    cpu_count: 1
+    restart: always
+    cgroup: host
+    environment:
+      - TZ=Asia/Bangkok
+
 networks:
   crane-net:
     driver: bridge
