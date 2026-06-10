@@ -1,0 +1,44 @@
+name: crane-vps
+
+services:
+  vps1:
+    image: docker.io/dreamoutbox/crane-dev-vps:latest
+    container_name: vps1
+    hostname: vps1
+    privileged: true # required for systemd
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - ./keys/authorized_keys:/opt/authorized_keys:ro
+    ports:
+      - "2221:22"
+      - "8081:80"
+      - "8441:443"
+      - "3001:3000"
+      - "80:80"
+      - "443:443"
+      - "5432:5432"
+      - "5001:5432"
+    networks:
+      crane-net:
+        ipv4_address: 10.0.0.11
+    tmpfs:
+      - /run
+      - /run/lock
+      - /tmp
+    stop_signal: SIGRTMIN+3 # clean systemd shutdown
+    mem_limit: 1G
+    cpu_count: 1
+    restart: always
+    cgroup: host
+    environment:
+      - TZ=Asia/Bangkok
+
+networks:
+  crane-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
+
+volumes:
+  minio_data:
