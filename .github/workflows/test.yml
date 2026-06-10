@@ -1,6 +1,9 @@
 name: Test Systemd container
 
-on: [push]
+on:
+  # push:
+  #   branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   run-systemd-test:
@@ -73,7 +76,7 @@ jobs:
           sleep 5
           docker ps -a
 
-      - name: Verify Systemd is Running
+      - name: Verify Systemd is Running vps1
         run: |
           docker exec vps1 systemctl status
 
@@ -89,7 +92,7 @@ jobs:
           # test curl
           curl http://localhost:80
 
-      - name: Verify Systemd is Running
+      - name: Verify Systemd is Running vps2
         run: |
           docker exec vps2 systemctl status
 
