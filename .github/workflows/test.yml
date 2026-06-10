@@ -82,7 +82,12 @@ jobs:
           # Example: Install and verify a systemd service (nginx)
           docker exec vps1 apt-get update
           docker exec vps1 apt-get install -y nginx
+          docker exec vps1 systemctl start nginx
+          # wait for 5 seconds
+          sleep 5
           docker exec vps1 systemctl is-active nginx
+          # test curl
+          curl http://localhost:80
 
       - name: compos down
         if: always()
